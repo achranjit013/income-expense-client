@@ -12,6 +12,7 @@ export const TransactionTable = ({ transList }) => {
             <th>Title</th>
             <th>Income</th>
             <th>Expenses</th>
+            <th>Type</th>
           </tr>
         </thead>
         <tbody>
@@ -33,6 +34,17 @@ export const TransactionTable = ({ transList }) => {
               <td>{type}</td>
             </tr>
           ))}
+
+          <tr className="fw-bolder">
+            <td colSpan={2} className="text-end">
+              Total Balance:
+            </td>
+            <td colSpan={3} className="text-start">
+              {transList.reduce((acc, { amount, type }) => {
+                return type === "income" ? acc + amount : acc - amount;
+              }, 0)}
+            </td>
+          </tr>
         </tbody>
       </Table>
     </div>
