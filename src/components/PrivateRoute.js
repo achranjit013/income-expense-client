@@ -4,7 +4,6 @@ import { Navigate } from "react-router-dom";
 export const PrivateRoute = ({ children }) => {
   // get user info from session
   const userJson = sessionStorage.getItem("user");
-  console.log(userJson);
 
   // parse user info to obj
   const userObj = JSON.parse(userJson);

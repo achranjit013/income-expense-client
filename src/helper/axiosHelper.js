@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const rootAPI = "http://localhost:8000/api/v1";
+const rootAPI = process.env.REACT_APP_ROOTAPI;
 const userAPI = rootAPI + "/user";
 const tranAPI = rootAPI + "/transaction";
 
@@ -42,8 +42,6 @@ export const loginUser = async (userObj) => {
 export const postTransaction = async (tranObj) => {
   try {
     const userId = getUserId();
-    console.log("first");
-    console.log(userId);
     if (!userId) {
       return {
         status: "error",
@@ -77,6 +75,32 @@ export const getTransaction = async () => {
     }
 
     const { data } = await axios.get(tranAPI, {
+      headers: {
+        Authorization: userId,
+      },
+    });
+    return data;
+  } catch (error) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
+
+// delete
+export const deleteTransaction = async (_id) => {
+  try {
+    const userId = getUserId();
+    if (!userId) {
+      return {
+        status: "error",
+        message: "User not found. Please log out and log in again.",
+      };
+    }
+
+    const { data } = await axios.delete(tranAPI, {
+      data: _id,
       headers: {
         Authorization: userId,
       },

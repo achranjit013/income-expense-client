@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { TopNav } from "../components/TopNav";
-import { Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { TransactionForm } from "../components/TransactionForm";
 import { getTransaction } from "../helper/axiosHelper";
 import { TransactionTable } from "../components/TransactionTable";
+import { CustomModal } from "../components/CustomModal";
 
 export const Dashboard = () => {
   const [transList, setTransList] = useState([]);
+  const [modalShow, setModalShow] = useState(false);
 
   useEffect(() => {
     getAllTrans();
@@ -14,8 +16,6 @@ export const Dashboard = () => {
 
   const getAllTrans = async () => {
     const { status, tranList } = await getTransaction();
-    console.log("i am trans list");
-    console.log(transList);
     status === "success" && setTransList(tranList);
   };
 
@@ -23,8 +23,24 @@ export const Dashboard = () => {
     <div>
       <TopNav />
       <Container fluid>
-        <TransactionForm />
-        <TransactionTable transList={transList} />
+        <div className="text-end">
+          <Button
+            className="mt-5"
+            variant="primary"
+            onClick={() => setModalShow(true)}
+          >
+            Add new transaction
+          </Button>
+
+          <CustomModal show={modalShow} onHide={() => setModalShow(false)}>
+            <TransactionForm
+              getAllTrans={getAllTrans}
+              onHide={() => setModalShow(false)}
+            />
+          </CustomModal>
+        </div>
+
+        <TransactionTable transList={transList} getAllTrans={getAllTrans} />
       </Container>
     </div>
   );

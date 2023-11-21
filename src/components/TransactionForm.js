@@ -3,34 +3,7 @@ import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import { CustomInput } from "./CustomInput";
 import { getTransaction, postTransaction } from "../helper/axiosHelper";
 
-export const TransactionForm = () => {
-  const [form, setForm] = useState({});
-  const [response, setResponce] = useState({});
-
-  const handleOnSubmit = async (e) => {
-    e.preventDefault();
-
-    console.log(form);
-
-    const result = await postTransaction(form);
-    console.log("second");
-    console.log(result);
-    setResponce(result);
-
-    if (result.status === "success") {
-      getTransaction();
-    }
-  };
-
-  const handleOnChange = (e) => {
-    const { name, value } = e.target;
-
-    setForm({
-      ...form,
-      [name]: value,
-    });
-  };
-
+export const TransactionForm = ({ getAllTrans, onHide }) => {
   const inputs = [
     {
       label: "Date",
@@ -51,6 +24,31 @@ export const TransactionForm = () => {
       required: true,
     },
   ];
+
+  const [form, setForm] = useState({});
+  const [response, setResponce] = useState({});
+
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+
+    const result = await postTransaction(form);
+    setResponce(result);
+
+    if (result.status === "success") {
+      getAllTrans();
+    }
+
+    // setForm({ initialState });
+  };
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
 
   return (
     <div className="mt-5">
@@ -82,7 +80,9 @@ export const TransactionForm = () => {
           <Col md={1}>
             <Form.Group className="">
               <div className="d-grid mt-4">
-                <Button type="submit">Add</Button>
+                <Button type="submit" onClick={onHide}>
+                  Add
+                </Button>
               </div>
             </Form.Group>
           </Col>
